@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+    <file source-language="en" target-language="fr" datatype="plaintext" original="file.ext">
+        <body>
+            <trans-unit id="action.upload">
+                <source>action.upload</source>
+                <target><![CDATA[Charger des fichiers (images ou vidéos)<br> <small>Vous pouvez également glisser des fichiers ici</small>]]></target>
+            </trans-unit>
+
+            <trans-unit id="binary.b">
+                <source>binary.b</source>
+                <target>o</target>
+            </trans-unit>
+            <trans-unit id="binary.kb">
+                <source>binary.kb</source>
+                <target>Ko</target>
+            </trans-unit>
+            <trans-unit id="binary.mb">
+                <source>binary.mb</source>
+                <target>Mo</target>
+            </trans-unit>
+            <trans-unit id="binary.gb">
+                <source>binary.gb</source>
+                <target>Go</target>
+            </trans-unit>
+            <trans-unit id="binary.tb">
+                <source>binary.tb</source>
+                <target>To</target>
+            </trans-unit>
+
+            <trans-unit id="label.finished">
+                <source>label.finished</source>
+                <target>Terminé</target>
+            </trans-unit>
+            <trans-unit id="label.in_progress">
+                <source>label.in_progress</source>
+                <target>En cours</target>
+            </trans-unit>
+            <trans-unit id="label.media">
+                <source>label.media</source>
+                <target>Média</target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>

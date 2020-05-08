@@ -1,0 +1,26 @@
+services:
+    GaylordP\UploadBundle\Controller\UploadController:
+        tags: ['controller.service_arguments']
+        autowire: true
+
+    GaylordP\UploadBundle\EventListener\MediaListener:
+        arguments:
+            - '@parameter_bag'
+        tags:
+            -
+                name: 'doctrine.event_listener'
+                event: 'prePersist'
+            -
+                name: 'doctrine.event_listener'
+                event: 'postPersist'
+
+    GaylordP\UploadBundle\Form\Type\UploadType:
+        arguments:
+            - '@parameter_bag'
+            - '@validator'
+        tags:
+            - 'form.type'
+
+    GaylordP\UploadBundle\Twig\Extension:
+        tags:
+            - 'twig.extension'

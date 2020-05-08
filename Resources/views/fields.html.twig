@@ -1,0 +1,37 @@
+{% block upload_row %}
+    {{- block('form_row') -}}
+    <script type="text/template" id="upload-template">
+        <div class="upload-item">
+            <div class="upload-preview">
+                <img data-dz-thumbnail>
+            </div>
+            <div class="upload-info">
+                <p class="upload-name">
+                    <strong>
+                        <span data-dz-name></span>
+                    </strong>
+                    <span class="upload-size small">
+                        <span data-dz-size></span>
+                    </span>
+                </p>
+                <p class="invalid-feedback d-hide">
+                    <span class="form-error-icon badge badge-danger text-uppercase"></span>
+                    <span class="form-error-message" data-dz-errormessage></span>
+                </p>
+                <div class="progress">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" data-dz-uploadprogress></div>
+                </div>
+                <span class="btn btn-sm" data-dz-status></span>
+            </div>
+        </div>
+    </script>
+{% endblock %}
+
+{% block upload_widget %}
+    {{- block('hidden_widget') -}}
+    {{ 'action.upload'|trans({}, 'upload')|button('secondary', 'fas fa-upload', false,
+        {
+            'class': 'dz-message',
+        }
+    ) }}
+{% endblock %}

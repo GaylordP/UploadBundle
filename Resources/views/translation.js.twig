@@ -1,0 +1,14 @@
+<script>
+    const UPLOAD_TRANSLATION = {
+        'binary.b': '{{ 'binary.b'|trans({}, 'upload') }}',
+        'binary.kb': '{{ 'binary.kb'|trans({}, 'upload') }}',
+        'binary.mb': '{{ 'binary.mb'|trans({}, 'upload') }}',
+        'binary.gb': '{{ 'binary.gb'|trans({}, 'upload') }}',
+        'binary.tb': '{{ 'binary.tb'|trans({}, 'upload') }}',
+        'Error': '{{ 'Error'|trans({}, 'validators') }}',
+        'label.finished': '{{ 'label.finished'|trans({}, 'upload') }}',
+        'label.in_progress': '{{ 'label.in_progress'|trans({}, 'upload') }}',
+        'The file is too large. Allowed maximum size is \{\{ limit \}\} \{\{ suffix \}\}': '{{ 'The file is too large. Allowed maximum size is {{ limit }} {{ suffix }}.'|trans({}, 'validators') }}',
+        'The mime type of the file is invalid (\{\{ type \}\}). Allowed mime types are \{\{ types \}\}.': '{{ 'The mime type of the file is invalid ({{ type }}). Allowed mime types are {{ types }}.'|trans({}, 'validators') }}',
+    }
+</script>
