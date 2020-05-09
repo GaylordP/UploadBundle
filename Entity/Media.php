@@ -35,9 +35,9 @@ class Media
     /**
      * @var string
      *
-     * @ORM\Column(type="string", length=36)
+     * @ORM\Column(type="string", length=16, nullable=true)
      */
-    private $uuid;
+    private $token;
 
     /**
      * @var string
@@ -73,6 +73,27 @@ class Media
      * @ORM\Column(type="integer", options={"unsigned"=true})
      */
     private $size;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $width;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $height;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(type="time", nullable=true)
+     */
+    private $videoTime;
 
     /**
      * @var \DateTime
@@ -121,23 +142,23 @@ class Media
     }
 
     /**
-     * Get uuid
+     * Get token
      *
      * @return string
      */
-    public function getUuid(): ?string
+    public function getToken(): ?string
     {
-        return $this->uuid;
+        return $this->token;
     }
 
     /**
-     * Set uuid
+     * Set token
      *
-     * @param string $uuid
+     * @param string $token
      */
-    public function setUuid(?string $uuid): void
+    public function setToken(?string $token): void
     {
-        $this->uuid = $uuid;
+        $this->token = $token;
     }
 
     /**
@@ -238,6 +259,69 @@ class Media
     public function setSize(int $size): void
     {
         $this->size = $size;
+    }
+
+
+
+
+    /**
+     * Get width
+     *
+     * @return integer
+     */
+    public function getWidth(): ?int
+    {
+        return $this->width;
+    }
+
+    /**
+     * Set width
+     *
+     * @param integer $width
+     */
+    public function setWidth(int $width): void
+    {
+        $this->width = $width;
+    }
+
+    /**
+     * Get height
+     *
+     * @return integer
+     */
+    public function getHeight(): ?int
+    {
+        return $this->height;
+    }
+
+    /**
+     * Set height
+     *
+     * @param integer $height
+     */
+    public function setHeight(int $height): void
+    {
+        $this->height = $height;
+    }
+
+    /**
+     * Get videoTime
+     *
+     * @return \DateTime
+     */
+    public function getVideoTime(): ?\DateTime
+    {
+        return $this->videoTime;
+    }
+
+    /**
+     * Set videoTime
+     *
+     * @param \DateTime $videoTime
+     */
+    public function setVideoTime(\DateTime $videoTime): void
+    {
+        $this->videoTime = $videoTime;
     }
 
     /**

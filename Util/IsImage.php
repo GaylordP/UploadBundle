@@ -4,7 +4,7 @@ namespace GaylordP\UploadBundle\Util;
 
 class IsImage
 {
-    public static function check(string $mime): string
+    public static function check(string $mime): bool
     {
         return in_array($mime, [
             'image/gif',

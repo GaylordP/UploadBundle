@@ -24,13 +24,13 @@ class MediaResize
         int $height = null,
         string $resizeType = 'ratio'
     ): string {
-        $filePath = $this->uploadDirectory . '/' . $media->getUuid() . '/' . $media->getName();
+        $filePath = $this->uploadDirectory . '/' . $media->getToken() . '/' . $media->getName();
 
         if (null === $width && null === $height) {
             return $this->returnFilePath($filePath);
         }
 
-        $fileResizePath = $this->uploadDirectory . '/resize/' . $resizeType . '/_' . $width . '_' . $height. '_/' . $media->getUuid() . '/' . $media->getName();
+        $fileResizePath = $this->uploadDirectory . '/resize/' . $resizeType . '/_' . $width . '_' . $height. '_/' . $media->getToken() . '/' . $media->getName();
 
         if (file_exists($fileResizePath)) {
             return $this->returnFilePath($fileResizePath);

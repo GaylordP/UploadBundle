@@ -1,3 +1,6 @@
+parameters:
+    upload_hashids_salt: '%env(UPLOAD_HASHIDS_SALT)%'
+
 services:
     GaylordP\UploadBundle\Controller\UploadController:
         tags: ['controller.service_arguments']
@@ -6,6 +9,7 @@ services:
     GaylordP\UploadBundle\EventListener\MediaListener:
         arguments:
             - '%upload_directory%'
+            - '%upload_hashids_salt%'
         tags:
             -
                 name: 'doctrine.event_listener'

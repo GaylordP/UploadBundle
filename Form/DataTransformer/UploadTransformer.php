@@ -18,12 +18,18 @@ class UploadTransformer implements DataTransformerInterface
     {
         $media = new Media();
         $media->setFile(new File($data));
-        $media->setUuid($media->getFile()->getFileInfo()->getPathInfo()->getBasename());
         $media->setName($media->getFile()->getFilename());
         $media->setExtension($media->getFile()->guessExtension());
         $media->setMime($media->getFile()->getMimeType());
         $media->setSize($media->getFile()->getSize());
         $media->setIsImage(IsImage::check($media->getMime()));
+
+        if (true === $media->getIsImage()) {
+            list($width, $height) = getimagesize($media->getFile()->getPathname());
+
+            $media->setWidth($width);
+            $media->setHeight($height);
+        }
 
         return $media;
     }

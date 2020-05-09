@@ -5,15 +5,19 @@ namespace GaylordP\UploadBundle\EventListener;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use GaylordP\UploadBundle\Entity\Media;
 use GaylordP\UploadBundle\Util\IsImage;
-use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
+use Hashids\Hashids;
 
 class MediaListener
 {
     private $uploadDirectory;
+    private $salt;
 
-    public function __construct(string $uploadDirectory)
-    {
+    public function __construct(
+        string $uploadDirectory,
+        string $salt
+    ) {
         $this->uploadDirectory = $uploadDirectory;
+        $this->salt = $salt;
     }
 
     public function prePersist(LifecycleEventArgs $args): void
@@ -21,7 +25,6 @@ class MediaListener
         $object = $args->getObject();
 
         if ($object instanceof Media) {
-            $object->setUuid($object->getFile()->getFileInfo()->getPathInfo()->getBasename());
             $object->setName($object->getFile()->getFilename());
             $object->setExtension($object->getFile()->guessExtension());
             $object->setMime($object->getFile()->getMimeType());
@@ -35,7 +38,10 @@ class MediaListener
         $object = $args->getObject();
 
         if ($object instanceof Media) {
-            $uploadDirectory = $this->uploadDirectory . '/' . $object->getUuid() . '/';
+            $hashids = new Hashids($this->salt, 4);
+            $object->setToken($hashids->encode($object->getId()));
+
+            $uploadDirectory = $this->uploadDirectory . '/' . $object->getToken() . '/';
 
             mkdir($uploadDirectory, 0777, true);
 
@@ -47,6 +53,7 @@ class MediaListener
             rmdir($object->getFile()->getPath());
 
             $object->setFile(null);
+            $args->getEntityManager()->flush();
         }
     }
 }

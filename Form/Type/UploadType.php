@@ -4,7 +4,6 @@ namespace GaylordP\UploadBundle\Form\Type;
 
 use GaylordP\UploadBundle\Entity\Media;
 use GaylordP\UploadBundle\Form\DataTransformer\UploadTransformer;
-use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
