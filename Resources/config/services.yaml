@@ -5,22 +5,30 @@ services:
 
     GaylordP\UploadBundle\EventListener\MediaListener:
         arguments:
-            - '@parameter_bag'
+            - '%upload_directory%'
         tags:
-            -
-                name: 'doctrine.event_listener'
-                event: 'prePersist'
             -
                 name: 'doctrine.event_listener'
                 event: 'postPersist'
 
     GaylordP\UploadBundle\Form\Type\UploadType:
         arguments:
-            - '@parameter_bag'
+            - '@request_stack'
+            - '%upload_directory%'
             - '@validator'
+            - '@GaylordP\UploadBundle\Form\DataTransformer\UploadTransformer'
         tags:
             - 'form.type'
 
     GaylordP\UploadBundle\Twig\Extension:
+        arguments:
+            - '@GaylordP\UploadBundle\Util\MediaResize'
         tags:
             - 'twig.extension'
+
+    GaylordP\UploadBundle\Form\DataTransformer\UploadTransformer:
+
+    GaylordP\UploadBundle\Util\MediaResize:
+        arguments:
+            - '%upload_directory%'
+            - '%kernel.project_dir%'

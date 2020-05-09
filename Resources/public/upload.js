@@ -12,7 +12,7 @@ export default class Upload {
             chunking: true,
             chunkSize: 8000000,
             retryChunks: true,
-//            maxFilesize: parseInt($container.attr('data-constraint-maxsize-binary')) / 1000000,
+            maxFilesize: parseInt($container.attr('data-constraint-maxsize-binary')) / 1000000,
   //          acceptedFiles: $container.attr('data-constraint-mime'),
             thumbnailWidth: 100,
             thumbnailHeight: 100,
@@ -45,7 +45,8 @@ export default class Upload {
                 b: UPLOAD_TRANSLATION['binary.b'],
             },
             headers: {
-                'form-type': $container.attr('data-type'),
+                'form-controller': $container.attr('data-controller'),
+                'form-upload-name': $container.attr('data-form-name'),
             },
             init: function() {
                 let myDropzone = this
@@ -64,37 +65,16 @@ export default class Upload {
                 })
 
                 this.on('success', function(file) {
-                    try {
-                        let responseJson = JSON.parse(file.xhr.responseText)
-                        let $previewElement = $(file.previewElement)
+                    let $previewElement = $(file.previewElement)
+                    let $status = $previewElement.find('span[data-dz-status]')
+                    let $progressBar = $previewElement.find('.progress-bar')
 
-                        if (true === responseJson.success) {
-                            let inputValue = $input.val()
-                            let newInputValue = []
-
-                            if ('' !== inputValue) {
-                                newInputValue = JSON.parse(inputValue)
-                            }
-
-                            newInputValue.push(responseJson.path)
-
-                            let $status = $previewElement.find('span[data-dz-status]')
-                            let $progressBar = $previewElement.find('.progress-bar')
-
-                            $status.removeClass('btn-warning')
-                            $status.addClass('btn-success')
-                            $status.text(UPLOAD_TRANSLATION['label.finished'])
-                            $progressBar.attr('aria-valuenow', '100')
-                            $progressBar.removeClass('progress-bar-striped')
-                            $progressBar.removeClass('progress-bar-animated')
-
-                            $input.val(JSON.stringify(newInputValue))
-                        } else {
-                            myDropzone.emit('error', file, responseJson.message)
-                        }
-                    } catch (error) {
-                        console.log(error)
-                    }
+                    $status.removeClass('btn-warning')
+                    $status.addClass('btn-success')
+                    $status.text(UPLOAD_TRANSLATION['label.finished'])
+                    $progressBar.attr('aria-valuenow', '100')
+                    $progressBar.removeClass('progress-bar-striped')
+                    $progressBar.removeClass('progress-bar-animated')
                 })
 
                 this.on('error', function(file, errorMessage) {

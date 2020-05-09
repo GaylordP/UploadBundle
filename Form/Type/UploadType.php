@@ -2,6 +2,8 @@
 
 namespace GaylordP\UploadBundle\Form\Type;
 
+use GaylordP\UploadBundle\Entity\Media;
+use GaylordP\UploadBundle\Form\DataTransformer\UploadTransformer;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
@@ -11,27 +13,34 @@ use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
-use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\File as FileConstraint;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class UploadType extends AbstractType
 {
+    private $request;
     private $uploadDirectory;
     private $validator;
+    private $uploadTransformer;
 
     public function __construct(
-        ParameterBagInterface $parameters,
-        ValidatorInterface $validator
+        RequestStack $requestStack,
+        string $uploadDirectory,
+        ValidatorInterface $validator,
+        UploadTransformer $uploadTransformer
     ) {
-        $this->uploadDirectory = $parameters->get('upload_directory');
+        $this->request = $requestStack->getCurrentRequest();
+        $this->uploadDirectory = $uploadDirectory;
         $this->validator = $validator;
+        $this->uploadTransformer = $uploadTransformer;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
+            ->addModelTransformer($this->uploadTransformer)
             ->addEventListener(FormEvents::POST_SUBMIT, [
                 $this,
                 'onPostSubmit',
@@ -46,7 +55,7 @@ class UploadType extends AbstractType
         $constraints = $form->getConfig()->getOption('upload_constraints');
         $fileConstraints = new FileConstraint($constraints);
 
-        $file = new File($form->getData());
+        $file = $form->getData()->getFile();
 
         $errors = $this->validator->validate($file, $fileConstraints);
         foreach ($errors as $error) {
@@ -64,7 +73,8 @@ class UploadType extends AbstractType
 
         $view->vars['row_attr']['id'] = 'dropzone-' . $view->vars['id'];
         $view->vars['row_attr']['class'] = 'dropzone';
-        $view->vars['row_attr']['data-type'] = get_class($form->getRoot()->getConfig()->getType()->getInnerType());
+        $view->vars['row_attr']['data-controller'] = $this->request->attributes->get('_controller');
+        $view->vars['row_attr']['data-form-name'] = $form->getConfig()->getName();
         $view->vars['row_attr']['data-constraint-maxsize'] = $constraints['maxSize'];
         $view->vars['row_attr']['data-constraint-maxsize-binary'] = (new FileConstraint($constraints))->maxSize;
         $view->vars['row_attr']['data-constraint-mime'] = implode(',', $constraints['mimeTypes']);
@@ -73,6 +83,7 @@ class UploadType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
+            'data_class' => Media::class,
             'initial_files' => [],
             'upload_constraints' => [
                 'maxSize' => '2G',

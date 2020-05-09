@@ -2,11 +2,9 @@
 
 namespace GaylordP\UploadBundle\Controller;
 
-use GaylordP\UploadBundle\Entity\Media;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -70,29 +68,13 @@ class UploadController extends AbstractController
             move_uploaded_file($uploadedFile, $uploadedNewFilePath);
         }
 
-        $file = new File($uploadedNewFilePath);
+        $formData = $this->request->get('form-data');
+        parse_str($formData, $formValues);
+        $formName = array_key_first($formValues);
+        $formValues[$formName][$this->request->headers->get('form-upload-name')] = $uploadedNewFilePath;
+        $this->request->request->set($formName, $formValues[$formName]);
 
-        if (null !== $errors = $this->getErrors($file)) {
-            return new JsonResponse([
-                'success' => false,
-                'message' => $errors,
-                'path' => $uploadFileDirectory . $fileName,
-            ]);
-        }
-
-        $entityManager = $this->getDoctrine()->getManager();
-
-        $media = new Media();
-        $media->setFile($file);
-
-        $entityManager->persist($media);
-        $entityManager->flush();
-
-        return new JsonResponse([
-            'success' => true,
-            'path' => $uploadFileDirectory . $fileName,
-            'media_id' => $media->getId(),
-        ]);
+        return $this->forward($this->request->headers->get('form-controller'));
     }
 
     private function uploadChunk(Request $request, UploadedFile $uploadedFile): JsonResponse
@@ -114,9 +96,7 @@ class UploadController extends AbstractController
                 return $this->combineChunk($uploadedFile, $this->uploadDirectory . $chunkFileDirectory, $chunkTotalParts);
             }
 
-            return new JsonResponse([
-                'chunk_success' => true,
-            ]);
+            return new JsonResponse('chunk_success');
         }
     }
 
@@ -155,39 +135,5 @@ class UploadController extends AbstractController
         $safeFilename = transliterator_transliterate('Any-Latin; Latin-ASCII; [^A-Za-z0-9_] remove; Lower()', $originalFilename);
 
         return $safeFilename . '-'.uniqid() . '.' . $file->guessExtension();
-    }
-
-    private function getErrors(File $file): ?string
-    {
-        $formType = $this->request->headers->get('form-type');
-        $formData = $this->request->get('form-data');
-
-        if (!class_exists($formType)) {
-            return $this->translator->trans('The file could not be uploaded.', [], 'validators');
-        } else {
-            parse_str($formData, $formValues);
-            $formName = array_key_first($formValues);
-
-            $formValues[$formName]['upload'] = $file->getPathname();
-
-            $form = $this->createForm($formType);
-            $form->submit($formValues[$formName]);
-
-            if ($form->isSubmitted() && $form->isValid()) {
-                dump($form->getData());
-                return ;
-            } else {
-                dump($form->getErrors());
-                $messageList = [];
-
-                foreach ($form->getErrors(true) as $error) {
-                    $origin = $error->getOrigin()->getConfig();
-                    $messageList[] = $this->translator->trans($origin->getOption('label'), [], $origin->getOption('translation_domain')) . ' : ' . $error->getMessage();
-                }
-
-                return implode(' ', $messageList);
-            }
-
-        }
     }
 }

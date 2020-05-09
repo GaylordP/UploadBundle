@@ -11,9 +11,9 @@ class MediaListener
 {
     private $uploadDirectory;
 
-    public function __construct(ParameterBagInterface $parameters)
+    public function __construct(string $uploadDirectory)
     {
-        $this->uploadDirectory = $parameters->get('upload_directory');
+        $this->uploadDirectory = $uploadDirectory;
     }
 
     public function prePersist(LifecycleEventArgs $args): void
