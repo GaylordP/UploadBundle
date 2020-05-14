@@ -19,7 +19,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class UploadType extends AbstractType
 {
-    private $request;
+    private $requestStack;
     private $uploadDirectory;
     private $validator;
     private $uploadTransformer;
@@ -30,7 +30,7 @@ class UploadType extends AbstractType
         ValidatorInterface $validator,
         UploadTransformer $uploadTransformer
     ) {
-        $this->request = $requestStack->getCurrentRequest();
+        $this->requestStack = $requestStack;
         $this->uploadDirectory = $uploadDirectory;
         $this->validator = $validator;
         $this->uploadTransformer = $uploadTransformer;
@@ -72,7 +72,7 @@ class UploadType extends AbstractType
 
         $view->vars['row_attr']['id'] = 'dropzone-' . $view->vars['id'];
         $view->vars['row_attr']['class'] = 'dropzone';
-        $view->vars['row_attr']['data-controller'] = $this->request->attributes->get('_controller');
+        $view->vars['row_attr']['data-controller'] = $this->requestStack->getCurrentRequest()->attributes->get('_controller');
         $view->vars['row_attr']['data-form-name'] = $form->getConfig()->getName();
         $view->vars['row_attr']['data-constraint-maxsize'] = $constraints['maxSize'];
         $view->vars['row_attr']['data-constraint-maxsize-binary'] = (new FileConstraint($constraints))->maxSize;

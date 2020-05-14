@@ -14,7 +14,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class UploadController extends AbstractController
 {
-    private $request;
+    private $requestStack;
     private $uploadDirectory;
     private $translator;
 
@@ -23,7 +23,7 @@ class UploadController extends AbstractController
         ParameterBagInterface $parameters,
         TranslatorInterface $translator
     ) {
-        $this->request = $requestStack->getCurrentRequest();
+        $this->requestStack = $requestStack;
         $this->uploadDirectory = $parameters->get('upload_directory');
         $this->translator = $translator;
     }
@@ -68,13 +68,13 @@ class UploadController extends AbstractController
             move_uploaded_file($uploadedFile, $uploadedNewFilePath);
         }
 
-        $formData = $this->request->get('form-data');
+        $formData = $this->requestStack->getCurrentRequest()->get('form-data');
         parse_str($formData, $formValues);
         $formName = array_key_first($formValues);
-        $formValues[$formName][$this->request->headers->get('form-upload-name')] = $uploadedNewFilePath;
-        $this->request->request->set($formName, $formValues[$formName]);
+        $formValues[$formName][$this->requestStack->getCurrentRequest()->headers->get('form-upload-name')] = $uploadedNewFilePath;
+        $this->requestStack->getCurrentRequest()->request->set($formName, $formValues[$formName]);
 
-        return $this->forward($this->request->headers->get('form-controller'));
+        return $this->forward($this->requestStack->getCurrentRequest()->headers->get('form-controller'));
     }
 
     private function uploadChunk(Request $request, UploadedFile $uploadedFile): JsonResponse
