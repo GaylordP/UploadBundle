@@ -35,7 +35,7 @@ class Media
     /**
      * @var string
      *
-     * @ORM\Column(type="string", length=16, nullable=true)
+     * @ORM\Column(type="string", length=16)
      */
     private $token;
 
@@ -234,7 +234,7 @@ class Media
     /**
      * Get isImage
      *
-     * @return string
+     * @return bool
      */
     public function getIsImage(): ?bool
     {
