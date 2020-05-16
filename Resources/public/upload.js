@@ -2,7 +2,7 @@ window.Dropzone = require('dropzone')
 Dropzone.autoDiscover = false
 
 export default class Upload {
-    constructor(form_id) {
+    constructor(form_id, successCallback) {
         let previewTemplate = $('#upload-template').html()
         let $container = $('#dropzone-' + form_id)
         let $form = $container.closest('form');
@@ -75,6 +75,10 @@ export default class Upload {
                     $progressBar.attr('aria-valuenow', '100')
                     $progressBar.removeClass('progress-bar-striped')
                     $progressBar.removeClass('progress-bar-animated')
+
+                    if (successCallback !== undefined) {
+                        successCallback()
+                    }
                 })
 
                 this.on('error', function(file, errorMessage) {
