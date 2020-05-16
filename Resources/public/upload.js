@@ -64,7 +64,7 @@ export default class Upload {
                     formData.append('form-data', $form.serialize())
                 })
 
-                this.on('success', function(file) {
+                this.on('success', function(file, response) {
                     let $previewElement = $(file.previewElement)
                     let $status = $previewElement.find('span[data-dz-status]')
                     let $progressBar = $previewElement.find('.progress-bar')
@@ -77,7 +77,7 @@ export default class Upload {
                     $progressBar.removeClass('progress-bar-animated')
 
                     if (successCallback !== undefined) {
-                        successCallback()
+                        successCallback(response)
                     }
                 })
 
