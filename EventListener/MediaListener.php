@@ -43,7 +43,9 @@ class MediaListener
 
             $uploadDirectory = $this->uploadDirectory . '/' . $object->getToken() . '/';
 
-            mkdir($uploadDirectory, 0777, true);
+            if (!is_dir($uploadDirectory)) {
+                mkdir($uploadDirectory, 0777, true);
+            }
 
             rename(
                 $object->getFile()->getRealPath(),
