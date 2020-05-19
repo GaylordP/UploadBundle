@@ -4,18 +4,22 @@ namespace GaylordP\UploadBundle\Util;
 
 use GaylordP\UploadBundle\Entity\Media;
 use Intervention\Image\ImageManager;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class MediaResize
 {
     private $uploadDirectory;
     private $publicDir;
+    private $uploadParameters;
 
     public function __construct(
         string $uploadDirectory,
-        string $projectDir
+        string $projectDir,
+        array $uploadParameters
     ) {
         $this->uploadDirectory = $uploadDirectory;
         $this->publicDir = $projectDir . '/public';
+        $this->uploadParameters = $uploadParameters;
     }
 
     public function resize(
@@ -28,6 +32,19 @@ class MediaResize
 
         if (null === $width && null === $height) {
             return $this->returnFilePath($filePath);
+        }
+
+        if (
+            false ===
+            (
+                array_key_exists('media_resize_enabled', $this->uploadParameters)
+                    &&
+                array_key_exists($resizeType, $this->uploadParameters['media_resize_enabled'])
+                    &&
+                in_array(''. $width .'-'. $height .'', $this->uploadParameters['media_resize_enabled'][$resizeType])
+            )
+        ) {
+            return new NotFoundHttpException();
         }
 
         $fileResizePath = $this->uploadDirectory . '/resize/' . $resizeType . '/_' . $width . '_' . $height. '_/' . $media->getToken() . '/' . $media->getName();
