@@ -4,7 +4,6 @@ namespace GaylordP\UploadBundle\Util;
 
 use GaylordP\UploadBundle\Entity\Media;
 use Intervention\Image\ImageManager;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class MediaResize
 {
@@ -34,17 +33,8 @@ class MediaResize
             return $this->returnFilePath($filePath);
         }
 
-        if (
-            false ===
-            (
-                array_key_exists('media_resize_enabled', $this->uploadParameters)
-                    &&
-                array_key_exists($resizeType, $this->uploadParameters['media_resize_enabled'])
-                    &&
-                in_array(''. $width .'-'. $height .'', $this->uploadParameters['media_resize_enabled'][$resizeType])
-            )
-        ) {
-            return new NotFoundHttpException();
+        if (false === $this->resizeIsEnabled($resizeType, $width, $height)) {
+            return 'resize-is-not-enabled';
         }
 
         $fileResizePath = $this->uploadDirectory . '/resize/' . $resizeType . '/_' . $width . '_' . $height. '_/' . $media->getToken() . '/' . $media->getName();
@@ -73,6 +63,21 @@ class MediaResize
         $img->save($fileResizePath);
 
         return $this->returnFilePath($fileResizePath);
+    }
+
+    public function resizeIsEnabled($resizeType, $width, $height): bool
+    {
+        return
+            (
+                in_array($resizeType, ['ratio', 'square'])
+                    &&
+                array_key_exists('media_resize_enabled', $this->uploadParameters)
+                    &&
+                array_key_exists($resizeType, $this->uploadParameters['media_resize_enabled'])
+                    &&
+                in_array(''. $width .'-'. $height .'', $this->uploadParameters['media_resize_enabled'][$resizeType])
+            )
+        ;
     }
 
     private function returnFilePath(string $filePath): string

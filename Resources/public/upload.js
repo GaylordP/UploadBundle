@@ -13,7 +13,7 @@ export default class Upload {
             chunkSize: 8000000,
             retryChunks: true,
             maxFilesize: parseInt($container.attr('data-constraint-maxsize-binary')) / 1000000,
-  //          acceptedFiles: $container.attr('data-constraint-mime'),
+            acceptedFiles: $container.attr('data-constraint-mime'),
             thumbnailWidth: 100,
             thumbnailHeight: 100,
             parallelUploads: 1,
@@ -36,7 +36,7 @@ export default class Upload {
                 .replace('{{ types }}', '« ' + $container.attr('data-constraint-mime')
                 .replace(/,/g, ' ; ') + ' »')
             ,
-//            dictResponseError: UPLOAD_TRANSLATION['label.in_progress'] + ' : Code {{statusCode}}.',
+            dictResponseError: UPLOAD_TRANSLATION['Error'] + ' : Code {{statusCode}}.',
             dictFileSizeUnits: {
                 tb: UPLOAD_TRANSLATION['binary.tb'],
                 gb: UPLOAD_TRANSLATION['binary.gb'],
@@ -50,7 +50,6 @@ export default class Upload {
             },
             init: function() {
                 let myDropzone = this
-                let $input = $(myDropzone.element).find('#' + form_id)
 
                 this.on('addedfile', function(file) {
                     let $previewElement = $(file.previewElement)
