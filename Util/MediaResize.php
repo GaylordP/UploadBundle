@@ -27,7 +27,13 @@ class MediaResize
         int $height = null,
         string $resizeType = 'ratio'
     ): string {
-        $filePath = $this->uploadDirectory . '/' . $media->getToken() . '/' . $media->getName();
+        if (true === $media->getIsImage()) {
+            $mediaName = $media->getName();
+        } else {
+            $mediaName = $media->getName() . '.jpg';
+        }
+
+        $filePath = $this->uploadDirectory . '/' . $media->getToken() . '/' . $mediaName;
 
         if (null === $width && null === $height) {
             return $this->returnFilePath($filePath);
@@ -37,7 +43,7 @@ class MediaResize
             return 'resize-is-not-enabled';
         }
 
-        $fileResizePath = $this->uploadDirectory . '/resize/' . $resizeType . '/_' . $width . '_' . $height. '_/' . $media->getToken() . '/' . $media->getName();
+        $fileResizePath = $this->uploadDirectory . '/resize/' . $resizeType . '/_' . $width . '_' . $height. '_/' . $media->getToken() . '/' . $mediaName;
 
         if (file_exists($fileResizePath)) {
             return $this->returnFilePath($fileResizePath);

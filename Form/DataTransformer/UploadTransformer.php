@@ -2,6 +2,9 @@
 
 namespace GaylordP\UploadBundle\Form\DataTransformer;
 
+use FFMpeg\Coordinate\TimeCode;
+use FFMpeg\FFMpeg;
+use FFMpeg\FFProbe;
 use GaylordP\UploadBundle\Entity\Media;
 use GaylordP\UploadBundle\Util\IsImage;
 use Symfony\Component\Form\DataTransformerInterface;
@@ -29,6 +32,28 @@ class UploadTransformer implements DataTransformerInterface
 
             $media->setWidth($width);
             $media->setHeight($height);
+        } else {
+            $ffprobe = FFProbe::create();
+            $ffmpeg = FFMpeg::create();
+
+            $duration = round($ffprobe
+                ->format($media->getFile()->getPathname())
+                ->get('duration')
+            );
+            $media->setVideoTime((new \DateTime())->setTime(0, 0, 0)->modify('+' . $duration . ' seconds'));
+
+            $dimensions = $ffprobe
+                ->streams($media->getFile()->getPathname())
+                ->videos()
+                ->first()
+                ->getDimensions()
+            ;
+            $media->setWidth($dimensions->getWidth());
+            $media->setHeight($dimensions->getHeight());
+
+            $video = $ffmpeg->open($media->getFile()->getPathname());
+            $frame = $video->frame(TimeCode::fromSeconds($duration / 3 * 2));
+            $frame->save($media->getFile()->getPath() . '/' . $media->getFile()->getFilename() . '.jpg');
         }
 
         return $media;

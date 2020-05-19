@@ -47,10 +47,19 @@ class MediaListener
                 mkdir($uploadDirectory, 0777, true);
             }
 
+            $realPath = $object->getFile()->getRealPath();
+
             rename(
-                $object->getFile()->getRealPath(),
+                $realPath,
                 $uploadDirectory .  $object->getName()
             );
+
+            if (false === $object->getIsImage()) {
+                rename(
+                    $realPath . '.jpg',
+                    $uploadDirectory .  $object->getName() . '.jpg'
+                );
+            }
 
             rmdir($object->getFile()->getPath());
 
