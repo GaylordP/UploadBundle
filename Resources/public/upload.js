@@ -76,7 +76,7 @@ export default class Upload {
                     $progressBar.removeClass('progress-bar-animated')
 
                     if (successCallback !== undefined) {
-                        successCallback(file.xhr.response)
+                        successCallback($.parseJSON(file.xhr.response))
                     }
                 })
 
