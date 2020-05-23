@@ -33,7 +33,7 @@ class MediaResize
             $mediaName = $media->getName() . '.jpg';
         }
 
-        $filePath = $this->uploadDirectory . '/' . $media->getToken() . '/' . $mediaName;
+        $filePath = $this->uploadDirectory . '/' . $media->getUuid() . '/' . $mediaName;
 
         if (null === $width && null === $height) {
             return $this->returnFilePath($filePath);
@@ -43,7 +43,7 @@ class MediaResize
             return 'resize-is-not-enabled';
         }
 
-        $fileResizePath = $this->uploadDirectory . '/resize/' . $resizeType . '/_' . $width . '_' . $height. '_/' . $media->getToken() . '/' . $mediaName;
+        $fileResizePath = $this->uploadDirectory . '/resize/' . $resizeType . '/_' . $width . '_' . $height. '_/' . $media->getUuid() . '/' . $mediaName;
 
         if (file_exists($fileResizePath)) {
             return $this->returnFilePath($fileResizePath);

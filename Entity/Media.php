@@ -35,9 +35,9 @@ class Media
     /**
      * @var string
      *
-     * @ORM\Column(type="string", length=16, nullable=true)
+     * @ORM\Column(type="string", length=36, nullable=true)
      */
-    private $token;
+    private $uuid;
 
     /**
      * @var string
@@ -142,23 +142,23 @@ class Media
     }
 
     /**
-     * Get token
+     * Get uuid
      *
      * @return string
      */
-    public function getToken(): ?string
+    public function getUuid(): ?string
     {
-        return $this->token;
+        return $this->uuid;
     }
 
     /**
-     * Set token
+     * Set uuid
      *
-     * @param string $token
+     * @param string $uuid
      */
-    public function setToken(?string $token): void
+    public function setUuid(?string $uuid): void
     {
-        $this->token = $token;
+        $this->uuid = $uuid;
     }
 
     /**

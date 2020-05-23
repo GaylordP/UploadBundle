@@ -10,14 +10,10 @@ use Hashids\Hashids;
 class MediaListener
 {
     private $uploadDirectory;
-    private $salt;
 
-    public function __construct(
-        string $uploadDirectory,
-        string $salt
-    ) {
+    public function __construct(string $uploadDirectory)
+    {
         $this->uploadDirectory = $uploadDirectory;
-        $this->salt = $salt;
     }
 
     public function prePersist(LifecycleEventArgs $args): void
@@ -38,10 +34,10 @@ class MediaListener
         $object = $args->getObject();
 
         if ($object instanceof Media) {
-            $hashids = new Hashids($this->salt, 4);
-            $object->setToken($hashids->encode($object->getId()));
+            $uuid = uuid_create(UUID_TYPE_RANDOM);
+            $object->setUuid($uuid);
 
-            $uploadDirectory = $this->uploadDirectory . '/' . $object->getToken() . '/';
+            $uploadDirectory = $this->uploadDirectory . '/' . $uuid . '/';
 
             if (!is_dir($uploadDirectory)) {
                 mkdir($uploadDirectory, 0777, true);
