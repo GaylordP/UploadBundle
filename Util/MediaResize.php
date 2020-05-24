@@ -25,7 +25,7 @@ class MediaResize
         Media $media,
         int $width = null,
         int $height = null,
-        string $resizeType = 'ratio'
+        $resizeType = false
     ): string {
         if (true === $media->getIsImage()) {
             $mediaName = $media->getName();
@@ -35,7 +35,7 @@ class MediaResize
 
         $filePath = $this->uploadDirectory . '/' . $media->getUuid() . '/' . $mediaName;
 
-        if (null === $width && null === $height) {
+        if (false === $resizeType) {
             return $this->returnFilePath($filePath);
         }
 
