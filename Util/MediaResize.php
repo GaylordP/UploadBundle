@@ -23,8 +23,8 @@ class MediaResize
 
     public function resize(
         Media $media,
-        int $width = null,
-        int $height = null,
+        int $width = 0,
+        int $height = 0,
         $resizeType = false
     ): string {
         if (true === $media->getIsImage()) {
@@ -36,6 +36,9 @@ class MediaResize
         $filePath = $this->uploadDirectory . '/' . $media->getUuid() . '/' . $mediaName;
 
         if (false === $resizeType) {
+            $width = 0;
+            $height = 0;
+
             return $this->returnFilePath($filePath);
         }
 
