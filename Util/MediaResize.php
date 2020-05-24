@@ -86,7 +86,7 @@ class MediaResize
         ;
     }
 
-    private function returnFilePath(string $filePath): string
+    public function returnFilePath(string $filePath): string
     {
         return str_replace($this->publicDir, '', $filePath);
     }
