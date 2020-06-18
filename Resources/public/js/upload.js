@@ -1,7 +1,7 @@
 window.Dropzone = require('dropzone')
 Dropzone.autoDiscover = false
 
-export default class Upload {
+global.Upload = class {
     constructor(form_id, successCallback) {
         let previewTemplate = $('#upload-template').html()
         let $container = $('#dropzone-' + form_id)
@@ -49,9 +49,7 @@ export default class Upload {
                 'form-upload-name': $container.attr('data-form-name'),
             },
             init: function() {
-                let myDropzone = this
-
-                this.on('addedfile', function(file) {
+                this.on('addedfile', (file) => {
                     let $previewElement = $(file.previewElement)
                     let $status = $previewElement.find('span[data-dz-status]')
 
@@ -59,11 +57,11 @@ export default class Upload {
                     $status.text(UPLOAD_TRANSLATION['label.in_progress'])
                 })
 
-                this.on('sending', function(data, xhr, formData) {
+                this.on('sending', (data, xhr, formData) => {
                     formData.append('form-data', $form.serialize())
                 })
 
-                this.on('success', function(file, response) {
+                this.on('success', (file, response) => {
                     let $previewElement = $(file.previewElement)
                     let $status = $previewElement.find('span[data-dz-status]')
                     let $progressBar = $previewElement.find('.progress-bar')
@@ -80,7 +78,7 @@ export default class Upload {
                     }
                 })
 
-                this.on('error', function(file, errorMessage) {
+                this.on('error', (file, errorMessage) => {
                     let $previewElement = $(file.previewElement)
                     let $invalidFeedback = $previewElement.find('p.invalid-feedback')
                     let $formErrorIcon = $invalidFeedback.find('span.form-error-icon')
