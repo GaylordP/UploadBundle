@@ -96,7 +96,7 @@ class UploadController extends AbstractController
                 return $this->combineChunk($uploadedFile, $this->uploadDirectory . $chunkFileDirectory, $chunkTotalParts);
             }
 
-            return new JsonResponse('chunk_success');
+            return new JsonResponse('chunk_success', Response::HTTP_OK);
         }
     }
 
