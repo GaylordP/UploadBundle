@@ -17,8 +17,12 @@ class UploadTransformer implements DataTransformerInterface
         return $data;
     }
 
-    public function reverseTransform($data): Media
+    public function reverseTransform($data): ?Media
     {
+        if (null === $data) {
+            return null;
+        }
+
         $media = new Media();
         $media->setFile(new File($data));
         $media->setName($media->getFile()->getFilename());
@@ -32,7 +36,7 @@ class UploadTransformer implements DataTransformerInterface
 
             $media->setWidth($width);
             $media->setHeight($height);
-        } else {
+        } elseif ('mp4' === $media->getFile()->guessExtension()) {
             $ffprobe = FFProbe::create();
             $ffmpeg = FFMpeg::create();
 

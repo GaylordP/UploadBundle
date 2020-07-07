@@ -10,21 +10,25 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\RouterInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class UploadController extends AbstractController
 {
     private $requestStack;
     private $uploadDirectory;
+    private $router;
     private $translator;
 
     public function __construct(
         RequestStack $requestStack,
         ParameterBagInterface $parameters,
+        RouterInterface $router,
         TranslatorInterface $translator
     ) {
         $this->requestStack = $requestStack;
         $this->uploadDirectory = $parameters->get('upload_directory');
+        $this->router = $router;
         $this->translator = $translator;
     }
 
@@ -74,7 +78,12 @@ class UploadController extends AbstractController
         $formValues[$formName][$this->requestStack->getCurrentRequest()->headers->get('form-upload-name')] = $uploadedNewFilePath;
         $this->requestStack->getCurrentRequest()->request->set($formName, $formValues[$formName]);
 
-        return $this->forward($this->requestStack->getCurrentRequest()->headers->get('form-controller'));
+        $routerMatches = $this->router->match($this->requestStack->getCurrentRequest()->headers->get('form-url'));
+        $routerMatchesController = $routerMatches['_controller'];
+        $routerMatchesParams = $routerMatches;
+        unset($routerMatchesParams['_route'], $routerMatchesParams['_controller']);
+
+        return $this->forward($routerMatchesController, $routerMatchesParams);
     }
 
     private function uploadChunk(Request $request, UploadedFile $uploadedFile): JsonResponse

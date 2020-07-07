@@ -45,7 +45,7 @@ global.Upload = class {
                 b: UPLOAD_TRANSLATION['binary.b'],
             },
             headers: {
-                'form-controller': $container.attr('data-controller'),
+                'form-url': $container.attr('data-form-url'),
                 'form-upload-name': $container.attr('data-form-name'),
             },
             init: function() {

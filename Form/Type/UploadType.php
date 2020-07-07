@@ -51,18 +51,20 @@ class UploadType extends AbstractType
     {
         $form = $event->getForm();
 
-        $constraints = $form->getConfig()->getOption('upload_constraints');
-        $fileConstraints = new FileConstraint($constraints);
+        if (null !== $form->getData()) {
+            $constraints = $form->getConfig()->getOption('upload_constraints');
+            $fileConstraints = new FileConstraint($constraints);
 
-        $file = $form->getData()->getFile();
+            $file = $form->getData()->getFile();
 
-        $errors = $this->validator->validate($file, $fileConstraints);
-        foreach ($errors as $error) {
-            $form->addError(
-                new FormError(
-                    $file->getFileName() . ' : ' . $error->getMessage()
-                )
-            );
+            $errors = $this->validator->validate($file, $fileConstraints);
+            foreach ($errors as $error) {
+                $form->addError(
+                    new FormError(
+                        $file->getFileName() . ' : ' . $error->getMessage()
+                    )
+                );
+            }
         }
     }
 
@@ -71,8 +73,8 @@ class UploadType extends AbstractType
         $constraints = $form->getConfig()->getOption('upload_constraints');
 
         $view->vars['row_attr']['id'] = 'dropzone-' . $view->vars['id'];
-        $view->vars['row_attr']['class'] = 'dropzone';
-        $view->vars['row_attr']['data-controller'] = $this->requestStack->getCurrentRequest()->attributes->get('_controller');
+        $view->vars['row_attr']['class'] = trim(($view->vars['row_attr']['class'] = $view->vars['row_attr']['class'] ?? '') . ' dropzone');
+        $view->vars['row_attr']['data-form-url'] = $this->requestStack->getCurrentRequest()->getRequestUri();
         $view->vars['row_attr']['data-form-name'] = $form->getConfig()->getName();
         $view->vars['row_attr']['data-constraint-maxsize'] = $constraints['maxSize'];
         $view->vars['row_attr']['data-constraint-maxsize-binary'] = (new FileConstraint($constraints))->maxSize;
@@ -84,6 +86,7 @@ class UploadType extends AbstractType
         $resolver->setDefaults([
             'data_class' => Media::class,
             'initial_files' => [],
+            'error_bubbling' => false,
             'upload_constraints' => [
                 'maxSize' => '2G',
                 'mimeTypes' => [

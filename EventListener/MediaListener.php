@@ -50,7 +50,7 @@ class MediaListener
                 $uploadDirectory .  $object->getName()
             );
 
-            if (false === $object->getIsImage()) {
+            if ('mp4' === $object->getExtension()) {
                 rename(
                     $realPath . '.jpg',
                     $uploadDirectory .  $object->getName() . '.jpg'
