@@ -1,7 +1,7 @@
 window.Dropzone = require('dropzone')
 Dropzone.autoDiscover = false
 
-global.Upload = class {
+Upload = class {
     constructor(form_id, successCallback) {
         let previewTemplate = $('#upload-template').html()
         let $container = $('#dropzone-' + form_id)
