@@ -20,6 +20,12 @@ services:
         tags:
             - 'form.type'
 
+    GaylordP\UploadBundle\Repository\MediaRepository:
+        arguments:
+            - '@doctrine'
+        tags:
+            - 'doctrine.repository_service'
+
     GaylordP\UploadBundle\Twig\Extension:
         arguments:
             - '@GaylordP\UploadBundle\Util\MediaResize'
