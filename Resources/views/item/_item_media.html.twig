@@ -1,0 +1,14 @@
+{% if media.isImage %}
+    <img src="{{ media_resize(media, width ?? 600, height ?? 600, resize ?? 'square') }}" class="img-fluid img-thumbnail" alt="{{ 'label.media.photo'|trans({}, 'upload') }}">
+{% else %}
+    {% if resize is defined and false == resize %}
+        <div class="embed-responsive embed-responsive-16by9">
+            <video controls class="embed-responsive-item img-thumbnail">
+                <source src="/upload/{{ user_media.media.uuid }}/{{ user_media.media.name }}" type="{{ user_media.media.mime }}">
+                {{ 'video.browser.support'|trans({}, 'user_media') }}
+            </video>
+        </div>
+    {% else %}
+        <img src="{{ media_resize(media, width ?? 600, height ?? 600, resize ?? 'square') }}" class="img-fluid img-thumbnail" alt="{{ 'label.media.video'|trans({}, 'user_media') }}">
+    {% endif %}
+{% endif %}
