@@ -20,5 +20,12 @@ class UploadExtension extends Extension
             new FileLocator(__DIR__ . '/../Resources/config')
         );
         $loader->load('services.yaml');
+
+        $container->setParameter('twig.form.resources', array_merge(
+            [
+                '@Upload/form/theme.html.twig'
+            ],
+            $container->getParameter('twig.form.resources')
+        ));
     }
 }

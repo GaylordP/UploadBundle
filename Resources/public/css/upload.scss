@@ -39,3 +39,20 @@
 .dropzone > div.upload-item > div.upload-info > div.progress {
     margin-bottom: .5rem;
 }
+
+.row.form-upload-gallery {
+    margin: -.25rem;
+    cursor: pointer;
+}
+
+.row.form-upload-gallery:first-of-type {
+    margin-top: .25rem;
+}
+
+.row.form-upload-gallery > div {
+    padding: .25rem;
+}
+
+.row.form-upload-gallery > div > div.form-check {
+    display: none;
+}
