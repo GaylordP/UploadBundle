@@ -11,7 +11,7 @@ class UploadCompilerPass implements CompilerPassInterface
     {
         if ($container->hasParameter('twig.form.resources')) {
             $resources = $container->getParameter('twig.form.resources') ?: [];
-            array_unshift($resources, '@Upload/fields.html.twig');
+            array_unshift($resources, '@Upload/form/fields.html.twig', '@Upload/form/theme.html.twig');
             $container->setParameter('twig.form.resources', $resources);
         }
     }
