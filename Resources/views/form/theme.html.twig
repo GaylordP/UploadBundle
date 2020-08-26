@@ -7,23 +7,25 @@
 {%- endblock %}
 
 {% block upload_gallery_entry_widget -%}
-    {% set entity = form.vars.choices[child.vars.value].data %}
-    <div class="col-6 col-md-3 col-lg-2 form-upload-gallery-entry">
-        {{- form_widget(child, {
-            parent_label_class: label_attr.class|default(''),
-            translation_domain: choice_translation_domain,
-            valid: valid,
-        }) -}}
-        {{ include('@Upload/item/_item_media.html.twig',
-            {
-                'user_media': entity,
-                'resize': 'square',
-                'width': 400,
-                'height': 400,
-            },
-            with_context = false
-        ) }}
-    </div>
+    {% if null != child.vars.value %}
+        {% set entity = form.vars.choices[child.vars.value].data %}
+        <div class="col-6 col-md-3 col-lg-2 form-upload-gallery-entry">
+            {{- form_widget(child, {
+                parent_label_class: label_attr.class|default(''),
+                translation_domain: choice_translation_domain,
+                valid: valid,
+            }) -}}
+            {{ include('@Upload/item/_item_media.html.twig',
+                {
+                    'media': entity,
+                    'resize': 'square',
+                    'width': 400,
+                    'height': 400,
+                },
+                with_context = false
+            ) }}
+        </div>
+    {% endif %}
 {%- endblock %}
 
 {% block upload_gallery_user_media_widget -%}
@@ -35,21 +37,23 @@
 {%- endblock %}
 
 {% block upload_gallery_user_media_entry_widget -%}
-    {% set entity = form.vars.choices[child.vars.value].data %}
-    <div class="col-6 col-md-3 col-lg-2 form-upload-gallery-entry">
-        {{- form_widget(child, {
-            parent_label_class: label_attr.class|default(''),
-            translation_domain: choice_translation_domain,
-            valid: valid,
-        }) -}}
-        {{ include('@UserMedia/media/item/_item_media.html.twig',
-            {
-                'user_media': entity,
-                'resize': 'square',
-                'width': 400,
-                'height': 400,
-            },
-            with_context = false
-        ) }}
-    </div>
+    {% if null != child.vars.value %}
+        {% set entity = form.vars.choices[child.vars.value].data %}
+        <div class="col-6 col-md-3 col-lg-2 form-upload-gallery-entry">
+            {{- form_widget(child, {
+                parent_label_class: label_attr.class|default(''),
+                translation_domain: choice_translation_domain,
+                valid: valid,
+            }) -}}
+            {{ include('@UserMedia/media/item/_item_media.html.twig',
+                {
+                    'user_media': entity,
+                    'resize': 'square',
+                    'width': 400,
+                    'height': 400,
+                },
+                with_context = false
+            ) }}
+        </div>
+    {% endif %}
 {%- endblock %}
